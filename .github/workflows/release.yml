@@ -21,7 +21,7 @@ jobs:
           dotnet-version: 10.0.x
 
       - name: Publish .NET app
-        run: dotnet publish swiss-transport-mcp/swiss-transport-mcp.csproj -c Release -o ./publish /p:UseAppHost=false
+        run: dotnet publish swiss-transport-mcp/swiss-transport-mcp.csproj -c Release -o ./publish
 
       - name: Zip Release
         run: |
