@@ -14,7 +14,7 @@ RUN dotnet build "./swiss-transport-mcp.csproj" -c $BUILD_CONFIGURATION -o /app/
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./swiss-transport-mcp.csproj" -c $BUILD_CONFIGURATION -o /app/publish
+RUN dotnet publish "./swiss-transport-mcp.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:PublishSingleFile=false /p:SelfContained=false /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
