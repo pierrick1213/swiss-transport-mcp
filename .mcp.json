@@ -1,0 +1,10 @@
+{
+  "inputs": [],
+  "servers": {
+    "swiss-transport-mcp": {
+      "type": "http",
+      "url": "http://localhost:6015",
+      "headers": {}
+    }
+  }
+}
