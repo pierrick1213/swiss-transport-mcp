@@ -21,22 +21,22 @@ You can run this server either via **Docker** (recommended) or locally using **.
 
 ### Option 1: Using Docker (Recommended)
 
-The easiest way to integrate this server into your MCP client (like Claude Desktop) is to use the official Docker image available on Docker Hub:
+The easiest way to use this server is to run the official Docker image available on Docker Hub:
 👉 [https://hub.docker.com/repository/docker/pickcool/swiss-transport-mcp](https://hub.docker.com/repository/docker/pickcool/swiss-transport-mcp)
 
-Add the following configuration to your MCP client config file (e.g., `claude_desktop_config.json`):
+Start the server using Docker:
+```bash
+docker run -d -p 5263:8080 --name swiss-transport-mcp pickcool/swiss-transport-mcp:latest
+```
+
+Then, configure your MCP client to connect to it via HTTP Server-Sent Events (SSE). Keep in mind that not all clients support HTTP/SSE (Claude Desktop does not support it out of the box yet without a proxy tool, but other clients or custom implementations do):
 
 ```json
 {
   "mcpServers": {
     "swiss-transport": {
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "pickcool/swiss-transport-mcp:latest"
-      ]
+      "type": "sse",
+      "url": "http://localhost:5263/"
     }
   }
 }
@@ -56,30 +56,25 @@ dotnet run
 Once running, you can use the `swiss-transport-mcp.http` file in Visual Studio or VS Code to send test requests.
 
 #### 2. Configure in your MCP Client
-To configure your AI client to spawn the server directly from the source code, add this to your MCP configuration file:
+Make sure your server is running (`dotnet run`), then configure your AI client to connect via HTTP. Add this to your MCP configuration file:
 
 ```json
 {
   "mcpServers": {
     "swiss-transport": {
-      "command": "dotnet",
-      "args": [
-        "run",
-        "--project",
-        "C:\\absolute\\path\\to\\your\\swiss-transport-mcp\\swiss-transport-mcp\\swiss-transport-mcp.csproj"
-      ]
+      "type": "sse",
+      "url": "https://localhost:5263/"
     }
   }
 }
 ```
-*(Make sure to replace the path with your actual absolute path).*
 
 ## 🧠 How it works under the hood
 
 This server is built using **ASP.NET Core 10.0** and the `ModelContextProtocol.AspNetCore` package. 
-It operates over **stdio** (standard input/output), which is the standard communication method for MCP servers spawned by clients like Claude Desktop. 
+It operates over **HTTP** (JSON-RPC over HTTP and Server-Sent Events), which makes it easy to integrate, scale, and test via standard HTTP clients.
 
-When your AI model decides it needs train information, the MCP client sends a JSON-RPC request to this server via `stdin`. The server queries the `transport.opendata.ch` API, cleans and formats the JSON response specifically to be easily digestible by LLMs, and returns the result via `stdout`.
+When your AI model decides it needs train information, the MCP client sends a JSON-RPC request to this server via HTTP. The server queries the `transport.opendata.ch` API, cleans and formats the JSON response specifically to be easily digestible by LLMs, and returns the result via HTTP.
 
 ## 🤝 Contributing
 
