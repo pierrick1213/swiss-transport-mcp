@@ -1,16 +1,8 @@
-using System.Collections;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Web;
 using ModelContextProtocol.Server;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-/// <summary>
-/// Sample MCP tools for demonstration purposes.
-/// These tools can be invoked by MCP clients to perform various operations.
-/// </summary>
 internal class TransportdataTools
 {
     private static readonly HttpClient _httpClient = new HttpClient
@@ -63,6 +55,8 @@ internal class TransportdataTools
     public async Task<string> GetConnections(
         [Description("Specifies the departure location of the connection (e.g., 'Lausanne')")] string from,
         [Description("Specifies the arrival location of the connection (e.g., 'Genève')")] string to,
+        [Description("Specifies up to five via locations.")] string[]? via = null,
+        [Description("Transportation means; one or more of train, tram, ship, bus, cableway.")] string[]? transportations = null,
         [Description("Date of the connection, in the format YYYY-MM-DD")] string? date = null,
         [Description("Time of the connection, in the format hh:mm")] string? time = null,
         [Description("Defaults to 0, if set to 1 the passed date and time is the arrival time")] int? isArrivalTime = null,
@@ -78,6 +72,23 @@ internal class TransportdataTools
         if (isArrivalTime.HasValue) queryParams["isArrivalTime"] = isArrivalTime.Value.ToString();
         if (limit.HasValue) queryParams["limit"] = limit.Value.ToString();
         if (page.HasValue) queryParams["page"] = page.Value.ToString();
+
+        if (via != null && via.Any())
+        {
+            // On limite à 5 éléments maximum comme le demande l'API
+            foreach (var v in via.Take(5))
+            {
+                queryParams.Add("via[]", v);
+            }
+        }
+
+        if (transportations != null && transportations.Any())
+        {
+            foreach (var transport in transportations)
+            {
+                queryParams.Add("transportations[]", transport);
+            }
+        }
 
         var (connectionData, error) = await _httpClient.GetFromJsonSafeAsync<ConnectionsResponse>($"connections?{queryParams}");
         if (error != null) return error;
@@ -113,6 +124,7 @@ internal class TransportdataTools
         [Description("Specifies the location of which a stationboard should be returned (e.g., 'Aarau')")] string? station = null,
         [Description("The id of the station. Alternative to 'station' parameter; one of these two is required.")] string? id = null,
         [Description("Number of departing connections to return.")] int? limit = null,
+        [Description("Transportation means; one or more of: train, tram, ship, bus, cableway.")] string[]? transportations = null,
         [Description("Date and time of departing connections, in the format YYYY-MM-DD hh:mm")] string? datetime = null,
         [Description("'departure' (default) or 'arrival'")] string? type = null)
     {
@@ -123,6 +135,14 @@ internal class TransportdataTools
         if (limit.HasValue) queryParams["limit"] = limit.Value.ToString();
         if (!string.IsNullOrEmpty(datetime)) queryParams["datetime"] = datetime;
         if (!string.IsNullOrEmpty(type)) queryParams["type"] = type;
+
+        if (transportations != null && transportations.Any())
+        {
+            foreach (var transport in transportations)
+            {
+                queryParams.Add("transportations[]", transport);
+            }
+        }
 
         var (StationboardData, error) = await _httpClient.GetFromJsonSafeAsync<StationboardResponse>($"stationboard?{queryParams}");
 

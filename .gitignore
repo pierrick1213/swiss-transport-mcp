@@ -1,6 +1,6 @@
 # Visual Studio
 .vs/
 
-# Build folders (optionnel mais recommandé)
+# Build folders
 bin/
 obj/
