@@ -1,7 +1,9 @@
 # For more info on HTTP files go to https://aka.ms/vs/httpfile
+# This file allows you to execute HTTP requests directly from Visual Studio or VS Code.
 
 @HostAddress = https://localhost:5263
 
+### Call GetLocations Tool
 POST {{HostAddress}}/
 Accept: application/json, text/event-stream
 Content-Type: application/json
@@ -12,6 +14,47 @@ MCP-Protocol-Version: 2025-11-25
     "id": 1,
     "method": "tools/call",
     "params": {
-        "name": "get_random_number"
+        "name": "GetLocations",
+        "arguments": {
+            "query": "Basel"
+        }
     }
 }
+
+### Call GetConnections Tool
+# POST {{HostAddress}}/
+# Accept: application/json, text/event-stream
+# Content-Type: application/json
+# MCP-Protocol-Version: 2025-11-25
+
+# {
+#     "jsonrpc": "2.0",
+#     "id": 2,
+#     "method": "tools/call",
+#     "params": {
+#         "name": "GetConnections",
+#         "arguments": {
+#             "from": "Lausanne",
+#             "to": "Genève"
+#         }
+#     }
+# }
+
+### Call GetStationboard Tool
+# POST {{HostAddress}}/
+# Accept: application/json, text/event-stream
+# Content-Type: application/json
+# MCP-Protocol-Version: 2025-11-25
+
+# {
+#     "jsonrpc": "2.0",
+#     "id": 3,
+#     "method": "tools/call",
+#     "params": {
+#         "name": "GetStationboard",
+#         "arguments": {
+#             "station": "Aarau",
+#             "limit": 5
+#         }
+#     }
+# }
