@@ -29,14 +29,14 @@ Start the server using Docker:
 docker run -d -p 5263:8080 --name swiss-transport-mcp pickcool/swiss-transport-mcp:latest
 ```
 
-Then, configure your MCP client to connect to it via HTTP Server-Sent Events (SSE). Keep in mind that not all clients support HTTP/SSE (Claude Desktop does not support it out of the box yet without a proxy tool, but other clients or custom implementations do):
+Then, configure your MCP client to connect to it via HTTP:
 
 ```json
 {
   "mcpServers": {
     "swiss-transport": {
-      "type": "sse",
-      "url": "http://localhost:5263/"
+      "type": "http",
+      "url": "http://localhost:5263"
     }
   }
 }
@@ -62,8 +62,8 @@ Make sure your server is running (`dotnet run`), then configure your AI client t
 {
   "mcpServers": {
     "swiss-transport": {
-      "type": "sse",
-      "url": "https://localhost:5263/"
+      "type": "http",
+      "url": "http://localhost:5263"
     }
   }
 }
@@ -72,9 +72,9 @@ Make sure your server is running (`dotnet run`), then configure your AI client t
 ## 🧠 How it works under the hood
 
 This server is built using **ASP.NET Core 10.0** and the `ModelContextProtocol.AspNetCore` package. 
-It operates over **HTTP** (JSON-RPC over HTTP and Server-Sent Events), which makes it easy to integrate, scale, and test via standard HTTP clients.
+It operates over **HTTP**, which makes it easy to integrate, scale, and test via standard HTTP clients.
 
-When your AI model decides it needs train information, the MCP client sends a JSON-RPC request to this server via HTTP. The server queries the `transport.opendata.ch` API, cleans and formats the JSON response specifically to be easily digestible by LLMs, and returns the result via HTTP.
+When your AI model decides it needs train information, the MCP client sends a JSON-RPC request to this server via HTTP POST. The server queries the `transport.opendata.ch` API, cleans and formats the JSON response specifically to be easily digestible by LLMs, and returns the result in the HTTP response.
 
 ## 🤝 Contributing
 
