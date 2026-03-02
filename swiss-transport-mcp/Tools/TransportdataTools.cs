@@ -5,10 +5,12 @@ using ModelContextProtocol.Server;
 
 internal class TransportdataTools
 {
-    private static readonly HttpClient _httpClient = new HttpClient
+    private readonly HttpClient _httpClient;
+
+    public TransportdataTools(HttpClient httpClient)
     {
-        BaseAddress = new Uri("http://transport.opendata.ch/v1/")
-    };
+        _httpClient = httpClient;
+    }
 
     [McpServerTool]
     [Description("Returns the matching locations for the given parameters. Either query or (x and y) are required.")]
