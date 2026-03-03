@@ -17,11 +17,27 @@ This MCP server exposes three main tools to your AI agent:
 
 ## 🚀 How to use this MCP Server
 
-You can run this server either via **Docker** (recommended) or locally using **.NET**.
+You can use the **public server directly**, or run this server yourself via **Docker** or locally using **.NET**.
 
-### Option 1: Using Docker (Recommended)
+### Option 1: Using the Public Server (Easiest)
 
-The easiest way to use this server is to run the official Docker image available on Docker Hub:
+You don't need to install anything! The server is already hosted and available for public use.
+Simply add the following configuration to your MCP client config file (e.g., `claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "swiss-transport": {
+      "type": "http",
+      "url": "https://swiss-transport.pa-nas.ch/mcp"
+    }
+  }
+}
+```
+
+### Option 2: Using Docker (Self-hosted)
+
+The easiest way to self-host this server is to run the official Docker image available on Docker Hub:
 👉 [https://hub.docker.com/repository/docker/pickcool/swiss-transport-mcp](https://hub.docker.com/repository/docker/pickcool/swiss-transport-mcp)
 
 Start the server using Docker:
@@ -42,7 +58,7 @@ Then, configure your MCP client to connect to it via HTTP:
 }
 ```
 
-### Option 2: Running locally with .NET
+### Option 3: Running locally with .NET
 
 If you prefer to run it locally or want to contribute to the code, you need [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) installed.
 
