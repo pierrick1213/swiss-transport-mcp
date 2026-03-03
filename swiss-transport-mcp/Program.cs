@@ -15,7 +15,6 @@ builder.Services
     .WithTools<TransportdataTools>();
 
 var app = builder.Build();
-app.MapMcp();
+app.MapMcp("/mcp");
 app.UseHttpsRedirection();
-
 app.Run();
