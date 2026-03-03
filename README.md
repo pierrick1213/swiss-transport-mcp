@@ -36,7 +36,7 @@ Then, configure your MCP client to connect to it via HTTP:
   "mcpServers": {
     "swiss-transport": {
       "type": "http",
-      "url": "http://localhost:5263"
+      "url": "http://localhost:5263/mcp"
     }
   }
 }
@@ -63,7 +63,7 @@ Make sure your server is running (`dotnet run`), then configure your AI client t
   "mcpServers": {
     "swiss-transport": {
       "type": "http",
-      "url": "http://localhost:5263"
+      "url": "http://localhost:5263/mcp"
     }
   }
 }
